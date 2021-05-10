@@ -1,0 +1,138 @@
+﻿@model DocumentEditing.ViewModels.ViewProjectModel
+
+
+
+@{
+    var project = Model.Project;
+    ViewData["Title"] = "EditProject";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h1>@Model.Project.Name</h1>
+</div>
+
+<div>
+
+    <font>Last uploaded file:</font>
+
+    <a asp-action="Download" asp-route-filePath="@Model.Project.CurrentFile.PathToFile" asp-route-fileName="@Model.Project.CurrentFile.FileName">@Model.Project.CurrentFile.FileName</a>
+
+</div>
+
+<div class="row">
+    <a class="nav-link" asp-action="Index">Back to List</a>
+</div>
+
+<hr />
+
+
+<div class="row col-md-12">
+    <div class="col-md-9">
+
+        @if (!Model.Project.IsProjectFinished)
+        {
+            <h4>Send comment</h4>
+
+            <div>
+                <form asp-action="AddCommentary" enctype="multipart/form-data" class="border-bottom">
+                    <div class="form-group">
+
+                        <label>Text</label>
+                        <textarea required class="form-control" name="userText"></textarea>
+                        <input hidden value="@Model.Project.Id" name="projectId" />
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-form-label">Attach file</label>                 
+                        <div class="custom-file">
+
+                            <input type="file" class="custom-file-input" name="attachedFile" />
+                            <label class="custom-file-label">Choose File...</label>
+
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3 mb-3">Send Comment</button>
+
+                </form>
+            </div>
+        }
+
+
+
+        <div>
+
+            @if(Model.Project.IsProjectFinished)
+            {
+                <h3>Project is finished</h3>
+            }
+
+            @foreach (var comment in Model.Commentaries)
+            {
+                <div class="list-group-horizontal mt-3">
+                    <font class="font-weight-bold">@comment.CommentOwner.Email</font>
+                    <font class="text-black-50">@comment.CommentDate.ToString("H:mm d MMM ", System.Globalization.CultureInfo.CreateSpecificCulture("en-US"))</font>
+                </div>
+
+                <div>@comment.Text</div>
+
+                if (comment.AttachedFile != null)
+                {
+                    <a asp-action="DownloadFile" asp-route-filePath="@comment.AttachedFile.PathToFile" asp-route-fileName="@comment.AttachedFile.FileName">@comment.AttachedFile.FileName</a>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="col-md-3 border-left">
+
+        <h5>Project Members</h5>
+        <ul>
+            @foreach (var user in Model.Project.Visitors)
+            {
+                <li>
+                    @user.UserName
+                </li>
+            }
+        </ul>
+
+        @if (Model.IsOwner)
+        {
+            <div>
+                <a class="nav-link" title="Add new member to project" asp-action="AddUserToProject" asp-route-projectId="@Model.Project.Id">Add member</a>
+            </div>
+
+            @if (!Model.Project.IsProjectFinished)
+            {
+                <h5 class="mt-5">Finish project</h5>
+
+                <div>
+                    <a class="nav-link" title="Close project for everyone" asp-action="FinishProject" asp-route-projectId="@Model.Project.Id">Close project</a>
+                </div>
+            }
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+
+                var filename = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(filename);
+
+            });
+        });
+
+    </script>
+
+
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
