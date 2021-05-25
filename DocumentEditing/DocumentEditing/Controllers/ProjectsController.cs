@@ -1,4 +1,5 @@
 ﻿using DocumentEditing.Areas.Identity.Data;
+using DocumentEditing.Areas.Services;
 using DocumentEditing.Data;
 using DocumentEditing.Models;
 using DocumentEditing.ViewModels;
@@ -26,14 +27,17 @@ namespace DocumentEditing.Controllers
 
 		private UserManager<ApplicationUser> _userManager;
 		private readonly IWebHostEnvironment _hostingEnvironment;
+		private readonly IProject _projectManager;
 
 		public ProjectsController(AuthDbContext context,
 									UserManager<ApplicationUser> userManager,
-									IWebHostEnvironment hostingEnvironment)
+									IWebHostEnvironment hostingEnvironment,
+									IProject projectManager)
 		{
 			_userManager = userManager;
 			_hostingEnvironment = hostingEnvironment;
 			_context = context;
+			_projectManager = projectManager;
 		}
 
 		/// <summary>
@@ -43,31 +47,9 @@ namespace DocumentEditing.Controllers
 		public async Task<IActionResult> Index()
 		{
 			var currentUser = await _userManager.GetUserAsync(User);
+			var userProjects = await _projectManager.GetUserProjects(currentUser.Id);
 
-			//get all projects where user is invited
-			var invitedProjects = _context.Projects.Include(p => p.Commentaries)
-											.Where(p => p.Visitors.Contains(currentUser) && p.ProjectOwnerId != currentUser.Id)
-											.ToList<Project>();
-
-			//sorting by last commentary date
-			var invitedProjectsSorted = invitedProjects.OrderByDescending(p => p.Commentaries.LastOrDefault().CommentDate).ToList();
-
-			//get all projects what belong to user 
-			var personalProjects = _context.Projects.Include(p => p.Commentaries)
-											.Where(p => p.ProjectOwnerId == currentUser.Id)
-											.ToList<Project>();
-
-			//sorting by last commentary date
-			var personalProjectsSorted = personalProjects.OrderByDescending(p => p.Commentaries.LastOrDefault().CommentDate).ToList();
-
-
-			ViewUserProjectsModel model = new ViewUserProjectsModel
-			{
-				InvitedProjects = invitedProjectsSorted,
-				PersonalProjects = personalProjectsSorted
-			};
-
-			return View(model);
+			return View(userProjects);
 		}
 
 
@@ -81,9 +63,11 @@ namespace DocumentEditing.Controllers
 		/// <returns></returns>
 		[HttpGet]
 		public async Task<IActionResult> AddUserToProject(int projectId)
-		{
+		{ 
 			var currentUser = await _userManager.GetUserAsync(User);
-			var project = await _context.Projects.Where(p => p.Id == projectId).FirstOrDefaultAsync();
+			var project = await _projectManager.GetProject(projectId);
+
+			//var projectt = await _context.Projects.Where(p => p.Id == projectId).FirstOrDefaultAsync();
 
 			//check user, he must be owner of project
 			if (project.ProjectOwnerId != currentUser.Id)
@@ -105,12 +89,13 @@ namespace DocumentEditing.Controllers
 		[HttpPost]
 		public async Task<IActionResult> AddUserToProject(AddUserToProjectModel model)
 		{
-			var project = await _context.Projects.Where(project => project.Id == model.ProjectId).FirstOrDefaultAsync();
-			var user = await _context.Users.Where(u => u.Email == model.UserEmail).FirstOrDefaultAsync();
+			await _projectManager.AddUserToProject(model.ProjectId, model.UserEmail);
+			//var project = await _context.Projects.Where(project => project.Id == model.ProjectId).FirstOrDefaultAsync();
+			//var user = await _context.Users.Where(u => u.Email == model.UserEmail).FirstOrDefaultAsync();
 
-			project.Visitors.Add(user);
+			//project.Visitors.Add(user);
 
-			_context.SaveChanges();
+			//_context.SaveChanges();
 
 			return RedirectToAction(nameof(ViewProject), new { projectId = model.ProjectId });
 		}
@@ -475,7 +460,7 @@ namespace DocumentEditing.Controllers
 			}
 
 			//create view model 
-			ViewProjectModel viewModel = new ViewProjectModel
+			ViewProject viewModel = new ViewProject
 			{				
 				Project = project,
 				Commentaries = comments

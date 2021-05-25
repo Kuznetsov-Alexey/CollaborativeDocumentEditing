@@ -1,4 +1,6 @@
 using DocumentEditing.Areas.Identity.Data;
+using DocumentEditing.Areas.Repository;
+using DocumentEditing.Areas.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +29,8 @@ namespace DocumentEditing
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllersWithViews();
+
+			services.AddTransient<IProject, ProjectRepository>();
 
 			services.AddMvc(options =>
 			{

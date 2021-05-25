@@ -9,7 +9,7 @@ namespace DocumentEditing.ViewModels
 	/// <summary>
 	/// For showing project info. Different possibilities for owner and for visitiors
 	/// </summary>
-	public class ViewProjectModel
+	public class ViewProject
 	{
 		public bool IsOwner { get; set; }
 
