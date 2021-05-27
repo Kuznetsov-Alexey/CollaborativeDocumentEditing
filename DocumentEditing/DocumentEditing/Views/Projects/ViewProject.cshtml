@@ -1,4 +1,4 @@
-﻿@model DocumentEditing.ViewModels.ViewProjectModel
+﻿@model DocumentEditing.ViewModels.ViewProject
 
 
 
@@ -16,7 +16,7 @@
 
     <font>Last uploaded file:</font>
 
-    <a asp-action="Download" asp-route-filePath="@Model.Project.CurrentFile.PathToFile" asp-route-fileName="@Model.Project.CurrentFile.FileName">@Model.Project.CurrentFile.FileName</a>
+    <a asp-action="DownloadFile" asp-route-userFileId="@Model.Project.CurrentFile.Id">@Model.Project.CurrentFile.FileName</a>
 
 </div>
 
@@ -81,7 +81,7 @@
 
                 if (comment.AttachedFile != null)
                 {
-                    <a asp-action="DownloadFile" asp-route-filePath="@comment.AttachedFile.PathToFile" asp-route-fileName="@comment.AttachedFile.FileName">@comment.AttachedFile.FileName</a>
+                    <a asp-action="DownloadFile" asp-route-userFileId="@Model.Project.CurrentFile.Id">@comment.AttachedFile.FileName</a>
                 }
             }
         </div>

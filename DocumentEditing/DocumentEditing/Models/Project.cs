@@ -33,7 +33,7 @@ namespace DocumentEditing.Models
 		public int CurrentFileId { get; set;}
 
 		//last uploaded file to project
-		public UploadedFile CurrentFile { get; set; }
+		public UserFile CurrentFile { get; set; }
 
 		//collection of users, who can visit page of project
 		public ICollection<ApplicationUser> Visitors { get;set; } = new List<ApplicationUser>();

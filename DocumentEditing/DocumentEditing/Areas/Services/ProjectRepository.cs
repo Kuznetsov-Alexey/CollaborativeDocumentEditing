@@ -6,8 +6,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using DocumentEditing.Areas.Identity.Data;
+using DocumentEditing.Areas.Interfaces;
+using DocumentEditing.Models;
 
-namespace DocumentEditing.Areas.Repository
+namespace DocumentEditing.Areas.Services
 {
 	public class ProjectRepository : IProject
 	{
@@ -16,6 +18,28 @@ namespace DocumentEditing.Areas.Repository
 		public ProjectRepository(AuthDbContext dbContext)
 		{
 			_dbContext = dbContext;
+		}
+
+		public async Task AddProject(Project project, Commentary commentary)
+		{
+			await _dbContext.Projects.AddAsync(project);
+			await _dbContext.SaveChangesAsync();		
+
+			await AddCommentary(commentary, project.Id);
+			
+		}
+
+		public async Task AddCommentary(Commentary commentary, int projectId)
+		{
+			var project = await _dbContext.Projects.FindAsync(projectId);		
+
+			if (commentary.AttachedFile != null)
+			{				
+				project.CurrentFile = commentary.AttachedFile;
+			}
+
+			await _dbContext.Comments.AddAsync(commentary);
+			await _dbContext.SaveChangesAsync();
 		}
 
 		public async Task AddUserToProject(int projectId, string userId)
@@ -48,6 +72,12 @@ namespace DocumentEditing.Areas.Repository
 											.OrderByDescending(c => c.CommentDate)
 											.ToListAsync();
 
+			if (!project.Visitors.Select(u => u.Id).Any(id => id == userId))
+			{
+				return null;
+			}
+
+
 			viewProject.Project = project;
 			viewProject.Commentaries = commentaries;
 			viewProject.IsOwner = project.ProjectOwnerId == userId ? true : false;
@@ -68,7 +98,7 @@ namespace DocumentEditing.Areas.Repository
 											.Where(p => p.ProjectOwnerId == userId)
 											.ToListAsync();
 
-			personalProjects = personalProjects.OrderByDescending(p => p.Commentaries.LastOrDefault().CommentDate).ToList();
+			personalProjects = personalProjects.OrderByDescending(p => p.Commentaries.LastOrDefault()?.CommentDate).ToList();
 
 			ViewUserProjects viewProjects = new ViewUserProjects
 			{
@@ -77,6 +107,17 @@ namespace DocumentEditing.Areas.Repository
 			};
 
 			return viewProjects;
+		}
+
+		public async Task FinishProject(int projectId, string userId)
+		{
+			var project = await _dbContext.Projects.FindAsync(projectId);
+			
+			if(project.ProjectOwnerId == userId)
+			{
+				project.IsProjectFinished = true;
+				await _dbContext.SaveChangesAsync();
+			}
 		}
 	}
 }

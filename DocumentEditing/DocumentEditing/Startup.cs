@@ -1,9 +1,10 @@
 using DocumentEditing.Areas.Identity.Data;
-using DocumentEditing.Areas.Repository;
+using DocumentEditing.Areas.Interfaces;
 using DocumentEditing.Areas.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +31,13 @@ namespace DocumentEditing
 		{
 			services.AddControllersWithViews();
 
+			
 			services.AddTransient<IProject, ProjectRepository>();
+			services.AddTransient<IInviteSender, EmailInviteSender>();
+			services.AddTransient<IFileManager, LocalFileManager>();
+			services.AddHttpContextAccessor();
+
+			//services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 			services.AddMvc(options =>
 			{

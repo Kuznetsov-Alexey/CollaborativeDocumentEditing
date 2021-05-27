@@ -9,7 +9,7 @@ namespace DocumentEditing.Models
 	/// <summary>
 	/// Representation of user file on server
 	/// </summary>
-	public class UploadedFile
+	public class UserFile
 	{
 		//uploaded file ID
 		public int Id { get; set; }
@@ -21,10 +21,10 @@ namespace DocumentEditing.Models
 		public string PathToFile { get; set; }
 
 		//field for link between tables
-		public string FileOwnerId { get; set; }
+		//public string FileOwnerId { get; set; }
 
 		//file owner
-		public ApplicationUser FileOwner { get; set; }
+		//public ApplicationUser FileOwner { get; set; }
 
 	}
 }

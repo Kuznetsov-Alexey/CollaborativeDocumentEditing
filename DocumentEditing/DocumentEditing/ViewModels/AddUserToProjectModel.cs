@@ -15,7 +15,7 @@ namespace DocumentEditing.ViewModels
 		public int ProjectId { get; set; }
 
 		[Required]		
-		[Remote(action: "IsUserExist", controller:"Projects", ErrorMessage ="Email not found in base")]
+		[EmailAddress]
 		public string UserEmail { get; set; }
 	}
 }

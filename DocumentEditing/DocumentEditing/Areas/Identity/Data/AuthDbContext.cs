@@ -35,6 +35,6 @@ namespace DocumentEditing.Data
         public DbSet<Project> Projects { get; set; }
 
         //context for files objects
-        public DbSet<UploadedFile> Files { get; set; }
+        public DbSet<UserFile> Files { get; set; }
     }
 }

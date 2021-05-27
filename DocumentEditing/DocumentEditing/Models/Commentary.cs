@@ -33,7 +33,7 @@ namespace DocumentEditing.Models
 		public int? AttachedFileId { get; set; } 
 
 		//file attached to commentary
-		public UploadedFile AttachedFile { get; set; }
+		public UserFile AttachedFile { get; set; }
 
 		//time of creation of comment
 		public DateTime CommentDate { get; set; }

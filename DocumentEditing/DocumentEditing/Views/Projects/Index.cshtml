@@ -1,5 +1,5 @@
-﻿@model DocumentEditing.ViewModels.ViewUserProjectsModel
-@{
+﻿@model DocumentEditing.ViewModels.ViewUserProjects
+@{ 
     ViewData["Title"] = "Home Page";
 }
 
@@ -22,7 +22,7 @@
                 <li class="nav-item">
 
                     <a class="nav-link" asp-action="ViewProject" asp-route-projectId="@project.Id">@project.Name</a>
-                    Modified - @project.Commentaries?.LastOrDefault().CommentDate.ToString("H:mm d MMM ", System.Globalization.CultureInfo.CreateSpecificCulture("en-US"))
+                    Modified - @project.Commentaries?.LastOrDefault()?.CommentDate.ToString("H:mm d MMM ", System.Globalization.CultureInfo.CreateSpecificCulture("en-US"))
 
                 </li>
             }
