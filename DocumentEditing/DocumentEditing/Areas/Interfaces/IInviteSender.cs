@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 
 namespace DocumentEditing.Areas.Interfaces
 {
+	/// <summary>
+	/// Send invite to project with login data 
+	/// </summary>
 	public interface IInviteSender
 	{
-		void SendInvite(string userEmail, string userPassword, string projectName);
+		Task SendInvite(string userEmail, string userPassword, string projectName);
 	}
 }

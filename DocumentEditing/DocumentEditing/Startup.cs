@@ -26,18 +26,15 @@ namespace DocumentEditing
 
 		public IConfiguration Configuration { get; }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
+	
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllersWithViews();
 
-			
 			services.AddTransient<IProject, ProjectRepository>();
 			services.AddTransient<IInviteSender, EmailInviteSender>();
 			services.AddTransient<IFileManager, LocalFileManager>();
 			services.AddHttpContextAccessor();
-
-			//services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 			services.AddMvc(options =>
 			{

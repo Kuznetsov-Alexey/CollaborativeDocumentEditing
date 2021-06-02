@@ -13,38 +13,42 @@ using System.Threading.Tasks;
 
 namespace DocumentEditing.Areas.Services
 {
+	/// <summary>
+	/// File manager for working with server storage
+	/// </summary>
 	public class LocalFileManager : IFileManager
 	{
+		private readonly AuthDbContext _dbContext;
+		private readonly IWebHostEnvironment _webHostEnvironment;
+
 		public LocalFileManager(IWebHostEnvironment webHostEnvironment, AuthDbContext dbContext)
 		{
 			_dbContext = dbContext;
 			_webHostEnvironment = webHostEnvironment;
 		}
 
-		private AuthDbContext _dbContext;
-		private IWebHostEnvironment _webHostEnvironment;
-
-
-		public async Task<MemoryStream> GetMemoryStream(int fileId)
+		public async Task<FileResult> GetFileResult(int fileId)
 		{
 			var userFile = await _dbContext.Files.FindAsync(fileId);
 
-			//save file in memory
-			var memory = new MemoryStream();
-			using (var stream = new FileStream(userFile.PathToFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+			if(userFile == null)
 			{
-				await stream.CopyToAsync(memory);
-			}
+				return null;
+			}	
+			
+			var contentType = GetContentType(userFile.PathToFile);			
 
-			//todo: create service for work with files
-			FileExtensionContentTypeProvider provider = new FileExtensionContentTypeProvider();
+			var result = new PhysicalFileResult(userFile.PathToFile, contentType);
+			result.FileDownloadName = userFile.FileName;
 
-			string fileType;
-			provider.TryGetContentType(userFile.PathToFile, out fileType);
-
-			memory.Position = 0;
-
-			return memory;
+			return result;
+		}
+		
+		private string GetContentType(string fileName)
+		{			
+			var provider = new FileExtensionContentTypeProvider();
+			provider.TryGetContentType(fileName, out string fileType);
+			return fileType;
 		}
 
 		public async Task<UserFile> UploadFile(IFormFile fileToUpload)
@@ -57,7 +61,7 @@ namespace DocumentEditing.Areas.Services
 			//get full path to file
 			string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-			//copy file to folder
+			//copy file to server folder
 			await fileToUpload.CopyToAsync(new FileStream(filePath, FileMode.Create));
 
 			UserFile userFile = new UserFile
@@ -67,13 +71,9 @@ namespace DocumentEditing.Areas.Services
 			};
 
 			_dbContext.Files.Add(userFile);
+			await _dbContext.SaveChangesAsync();		
 
 			return userFile;
-		}
-
-		public async Task<UserFile> GetUserFile(int fileId)
-		{
-			return await _dbContext.Files.FindAsync(fileId);
 		}
 	}
 }

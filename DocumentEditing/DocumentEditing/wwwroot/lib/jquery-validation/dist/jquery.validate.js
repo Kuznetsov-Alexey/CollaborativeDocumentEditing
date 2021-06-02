@@ -1469,8 +1469,7 @@ $.extend( $.validator, {
 				valid = true,
 				decimals;
 
-			// Works only for text, number and range input types
-			// TODO find a way to support input types date, datetime, datetime-local, month, time and week
+			// Works only for text, number and range input types			
 			if ( notSupported ) {
 				throw new Error( errorMessage );
 			}

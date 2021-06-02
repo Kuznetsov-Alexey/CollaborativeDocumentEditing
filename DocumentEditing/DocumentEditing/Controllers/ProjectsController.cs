@@ -19,37 +19,31 @@ using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace DocumentEditing.Controllers
 {	
 	[Authorize]
 	public class ProjectsController : Controller
 	{
-		private readonly AuthDbContext _context;
-
-		private UserManager<ApplicationUser> _userManager;
-		private readonly IWebHostEnvironment _hostingEnvironment;
+		private UserManager<ApplicationUser> _userManager;		
 		private readonly IProject _projectManager;
 		private readonly IInviteSender _inviteSender;
 		private readonly IFileManager _fileManager;
 
-		public ProjectsController(AuthDbContext context,
-									UserManager<ApplicationUser> userManager,
-									IWebHostEnvironment hostingEnvironment,
+		public ProjectsController(UserManager<ApplicationUser> userManager,									
 									IProject projectManager,
 									IInviteSender inviteSender,
 									IFileManager fileManager)
 		{
-			_userManager = userManager;
-			_hostingEnvironment = hostingEnvironment;
-			_context = context;
+			_userManager = userManager;					
 			_projectManager = projectManager;
 			_inviteSender = inviteSender;
 			_fileManager = fileManager;
 		}
 
 		/// <summary>
-		/// Page that represent all available projects for current user
+		/// Represent all available projects for current user
 		/// </summary>
 		/// <returns></returns>
 		public async Task<IActionResult> Index()
@@ -64,21 +58,20 @@ namespace DocumentEditing.Controllers
 		//------------       Add new member to project    ------------//
 
 
+
 		/// <summary>
-		/// Action for adding new project member
+		/// Show page for adding user to project
 		/// </summary>
-		/// <param name="projectId">Project to add user</param>
+		/// <param name="projectId"></param>
 		/// <returns></returns>
 		[HttpGet]
 		public async Task<IActionResult> AddUserToProject(int projectId)
 		{ 
 			var currentUser = await _userManager.GetUserAsync(User);
-			var project = await _projectManager.GetProject(projectId);
-
-			//var projectt = await _context.Projects.Where(p => p.Id == projectId).FirstOrDefaultAsync();
+			var project = await _projectManager.GetProject(projectId);			
 
 			//check user, he must be owner of project
-			if (project.ProjectOwnerId != currentUser.Id)
+			if (project.ProjectOwner != currentUser)
 			{
 				return RedirectToAction(nameof(Index));
 			}
@@ -92,22 +85,44 @@ namespace DocumentEditing.Controllers
 		}
 
 		/// <summary>
-		/// Add user to project after post request
+		/// POST adding user to project by model
 		/// </summary>
-		/// <param name="model">Model from html form</param>
+		/// <param name="model"></param>
 		/// <returns></returns>
 		[HttpPost]
 		public async Task<IActionResult> AddUserToProject(AddUserToProjectModel model)
 		{
-			var project = await _projectManager.GetProject(model.ProjectId);
-			var user = await _userManager.Users.Where(u => u.Email == model.UserEmail).FirstOrDefaultAsync();
+			var currentUser = await _userManager.GetUserAsync(User);
 
+			//get neccessary data from DB
+			var project = await _projectManager.GetProject(model.ProjectId);			
+
+			//for adding another persons, user must be a project owner
+			if(project.ProjectOwner != currentUser)
+			{
+				return RedirectToAction(nameof(ViewProject), new { projectId = model.ProjectId });
+			}
+
+			//todo: add identity.options.User.Require.UniqueEmail
+			var user = await _userManager.FindByEmailAsync(model.UserEmail);
+
+			//create user if he doesn't exist
 			if(user == null)
 			{
-				string userPassword = GeneratePassword(5);
-				await _userManager.CreateAsync(new ApplicationUser { Email = model.UserEmail, UserName = model.UserEmail }, userPassword);
-				user = await _userManager.Users.Where(u => u.Email == model.UserEmail).FirstOrDefaultAsync();
-				//_inviteSender.SendInvite(user.Email, userPassword, project.Name);				
+				user = new ApplicationUser
+				{
+					Email = model.UserEmail,
+					UserName = model.UserEmail
+				};
+
+				//todo:check migration with new method in ApplicationUser
+				string userPassword = user.GeneratePassword(5);				
+
+				await _userManager.CreateAsync(user, userPassword);
+
+
+				//Sending isn't working, because current email is blocked by @mail.ru
+				//await _inviteSender.SendInvite(user.Email, userPassword, project.Name);
 			}
 
 			await _projectManager.AddUserToProject(project.Id, user.Email);
@@ -115,75 +130,29 @@ namespace DocumentEditing.Controllers
 			return RedirectToAction(nameof(ViewProject), new { projectId = model.ProjectId });
 		}
 
-		/// <summary>
-		/// Simple password genarator, return password that consists of digit,
-		/// get one argue - length of password (4- min, 10 - max)
-		/// </summary>
-		/// <param name="passwordLenght">lenght of password</param>
-		/// <returns></returns>
-		private string GeneratePassword(int passwordLenght)
-		{
-			Random rand = new Random();
-
-			int minLenght = 4;
-			int maxLength = 10;
-
-			if (passwordLenght < minLenght)
-				passwordLenght = minLenght;
-
-			if (passwordLenght > maxLength)
-				passwordLenght = maxLength;
-
-			int botRange = 10;
-
-			for (int i = 2; i < passwordLenght; i++)
-				botRange *= 10;
-
-			int topRange = botRange * 10 - 1;
-
-			int value = rand.Next(botRange, topRange);
-			return value.ToString();
-		}
-
-		
-
 		//------------       Download file from page    ------------//
 
-		/// <summary>
-		/// Action for file downloading
-		/// </summary>
-		/// <param name="fileName">Short file name</param>
-		/// <param name="filePath">Full path to file</param>
-		/// <returns></returns>
-		public async Task<IActionResult> DownloadFile(int userFileId)
+		[HttpGet]
+		public async Task<IActionResult> DownloadFile(int fileId)
 		{
-			var userFileData = await _fileManager.GetUserFile(userFileId);
-			var memory = await _fileManager.GetMemoryStream(userFileId);
-						
-			////todo: create service for work with files
-			FileExtensionContentTypeProvider provider = new FileExtensionContentTypeProvider();
-						
-			provider.TryGetContentType(userFileData.FileName, out string fileType);			
+			var fileResult = await _fileManager.GetFileResult(fileId);
 
-			return File(memory, fileType, userFileData.FileName);
+			if(fileResult == null)
+			{
+				return new NotFoundResult();
+			}
+
+			return fileResult;
 		}
 
 		//------------  Create new project ------------//
 
-		/// <summary>
-		/// Show form for creation new project
-		/// </summary>
-		/// <returns></returns>
+		[HttpGet]
 		public IActionResult AddProject()
 		{
 			return View();
 		}
 
-		/// <summary>
-		/// Post action for creating new project
-		/// </summary>
-		/// <param name="model">got model from form</param>
-		/// <returns></returns>
 		[HttpPost]
 		public async Task<IActionResult> AddProject(AddProjectModel model)
 		{
@@ -231,11 +200,11 @@ namespace DocumentEditing.Controllers
 		[HttpGet]
 		public async Task<IActionResult> ViewProject(int projectId)
 		{		
+			//todo: change buttons style on view
 			var currentUser = await _userManager.GetUserAsync(User);
 			var viewModel = await _projectManager.GetProjectView(projectId, currentUser.Id);
 
-			//check user in visitors list
-			if (viewModel == null)
+			if(!viewModel.Project.Visitors.Contains(currentUser))
 			{
 				return RedirectToAction(nameof(Index));
 			}
@@ -243,15 +212,8 @@ namespace DocumentEditing.Controllers
 			return View(viewModel);
 		}
 
-		/// <summary>
-		/// Add commentary to project
-		/// </summary>
-		/// <param name="userText">Commentary text</param>
-		/// <param name="attachedFile">Uploaded file</param>
-		/// <param name="projectId">Id of project</param>
-		/// <returns></returns>
 		[HttpPost]
-		public async Task<IActionResult> AddCommentary(string userText, IFormFile attachedFile, int projectId)
+		public async Task<IActionResult> AddCommentaryToProject(string commentText, IFormFile attachedFile, int projectId)
 		{
 			var currentUser = await _userManager.GetUserAsync(User);
 			var project = await _projectManager.GetProject(projectId);
@@ -264,7 +226,7 @@ namespace DocumentEditing.Controllers
 			//create commentary object
 			var comment = new Commentary { 
 				CommentDate = DateTime.Now,
-				Text = userText,
+				Text = commentText,
 				ProjectId = projectId,
 				CommentOwner = currentUser
 			};
@@ -275,7 +237,7 @@ namespace DocumentEditing.Controllers
 				comment.AttachedFile = userFile;
 			}
 
-			await _projectManager.AddCommentary(comment, projectId);			
+			await _projectManager.AddCommentaryToProject(comment, projectId);			
 			return RedirectToAction(nameof(ViewProject), new { projectId = projectId });			
 		}
 
@@ -289,7 +251,12 @@ namespace DocumentEditing.Controllers
 		{
 			//get current user
 			var currentUser = await _userManager.GetUserAsync(User);
-			await _projectManager.FinishProject(projectId, currentUser.Id);			
+			var project = await _projectManager.GetProject(projectId);
+
+			if(project.ProjectOwnerId == currentUser.Id)
+			{
+				await _projectManager.FinishProject(projectId, currentUser.Id);
+			}
 
 			return RedirectToAction(nameof(ViewProject), new { projectId = projectId });
 		}

@@ -13,8 +13,6 @@ namespace DocumentEditing.Areas.Interfaces
 	{
 		Task<UserFile> UploadFile(IFormFile userFile);
 
-		Task<UserFile> GetUserFile(int fileId);
-
-		Task<MemoryStream> GetMemoryStream(int fileId);
+		Task<FileResult> GetFileResult(int fileId);
 	}
 }

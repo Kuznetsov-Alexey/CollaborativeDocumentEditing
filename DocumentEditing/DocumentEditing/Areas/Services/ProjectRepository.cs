@@ -25,11 +25,11 @@ namespace DocumentEditing.Areas.Services
 			await _dbContext.Projects.AddAsync(project);
 			await _dbContext.SaveChangesAsync();		
 
-			await AddCommentary(commentary, project.Id);
+			await AddCommentaryToProject(commentary, project.Id);
 			
 		}
 
-		public async Task AddCommentary(Commentary commentary, int projectId)
+		public async Task AddCommentaryToProject(Commentary commentary, int projectId)
 		{
 			var project = await _dbContext.Projects.FindAsync(projectId);		
 
@@ -44,8 +44,8 @@ namespace DocumentEditing.Areas.Services
 
 		public async Task AddUserToProject(int projectId, string userId)
 		{
-			var project = await _dbContext.Projects.Where(p => p.Id == projectId).FirstOrDefaultAsync();
-			var user = await _dbContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+			var project = await _dbContext.Projects.Where(p => p.Id == projectId).Include(p => p.Visitors).FirstOrDefaultAsync();
+			var user = await _dbContext.Users.FindAsync(userId);
 
 			project.Visitors.Add(user);
 
@@ -53,9 +53,9 @@ namespace DocumentEditing.Areas.Services
 
 		}
 
-		public async Task<Models.Project> GetProject(int projectId)
+		public async Task<Project> GetProject(int projectId)
 		{
-			return await _dbContext.Projects.Where(p => p.Id == projectId).FirstOrDefaultAsync();
+			return await _dbContext.Projects.Where(p => p.Id == projectId).Include(p => p.Visitors).FirstOrDefaultAsync();
 		}
 
 		public async Task<ViewProject> GetProjectView(int projectId, string userId)
@@ -71,12 +71,6 @@ namespace DocumentEditing.Areas.Services
 											.Where(c => c.ProjectId == projectId)
 											.OrderByDescending(c => c.CommentDate)
 											.ToListAsync();
-
-			if (!project.Visitors.Select(u => u.Id).Any(id => id == userId))
-			{
-				return null;
-			}
-
 
 			viewProject.Project = project;
 			viewProject.Commentaries = commentaries;
@@ -111,13 +105,9 @@ namespace DocumentEditing.Areas.Services
 
 		public async Task FinishProject(int projectId, string userId)
 		{
-			var project = await _dbContext.Projects.FindAsync(projectId);
-			
-			if(project.ProjectOwnerId == userId)
-			{
-				project.IsProjectFinished = true;
-				await _dbContext.SaveChangesAsync();
-			}
+			var project = await _dbContext.Projects.FindAsync(projectId);			
+			project.IsProjectFinished = true;
+			await _dbContext.SaveChangesAsync();			
 		}
 	}
 }

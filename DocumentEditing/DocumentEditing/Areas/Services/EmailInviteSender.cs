@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace DocumentEditing.Areas.Services
 {
@@ -17,7 +18,7 @@ namespace DocumentEditing.Areas.Services
 		private IHttpContextAccessor _httpContext { get; }
 
 		[Authorize]
-		public async void SendInvite(string userEmail, string userPassword, string projectName)
+		public async Task SendInvite(string userEmail, string userPassword, string projectName)
 		{
 			//data of mail.ru account
 			//sender email - example_inviter@mail.ru

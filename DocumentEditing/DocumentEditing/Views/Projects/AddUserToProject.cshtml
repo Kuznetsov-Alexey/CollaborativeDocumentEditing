@@ -26,29 +26,10 @@
             </div>
         </form>
     </div>
-
-    @*<div class="col-md-4 offset-2">
-        <h4>Send email with inviting</h4>
-        <form asp-action="SendMessageToEmail">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <input hidden asp-for="ProjectId" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="UserEmail" class="control-label"></label>
-                <input required name="UserEmail" class="form-control" />
-                <span asp-validation-for="UserEmail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Add Member" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-    *@
 </div>
 
 <div>
-    <a asp-action="ViewProject" asp-route-id="@Model.ProjectId">Back to Project</a>
+    <a asp-action="ViewProject" asp-route-projectId="@Model.ProjectId">Back to Project</a>
 </div>
 
 @section Scripts {

@@ -16,7 +16,7 @@
 
     <font>Last uploaded file:</font>
 
-    <a asp-action="DownloadFile" asp-route-userFileId="@Model.Project.CurrentFile.Id">@Model.Project.CurrentFile.FileName</a>
+    <a asp-action="DownloadFile" asp-route-fileId="@Model.Project.CurrentFile.Id">@Model.Project.CurrentFile.FileName</a>
 
 </div>
 
@@ -35,7 +35,7 @@
             <h4>Send comment</h4>
 
             <div>
-                <form asp-action="AddCommentary" enctype="multipart/form-data" class="border-bottom">
+                <form asp-action="AddCommentaryToProject" enctype="multipart/form-data" class="border-bottom">
                     <div class="form-group">
 
                         <label>Text</label>
@@ -81,7 +81,7 @@
 
                 if (comment.AttachedFile != null)
                 {
-                    <a asp-action="DownloadFile" asp-route-userFileId="@Model.Project.CurrentFile.Id">@comment.AttachedFile.FileName</a>
+                    <a asp-action="DownloadFile" asp-route-fileId="@comment.AttachedFile.Id">@comment.AttachedFile.FileName</a>
                 }
             }
         </div>

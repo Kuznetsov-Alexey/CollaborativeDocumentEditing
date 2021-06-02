@@ -19,7 +19,7 @@ namespace DocumentEditing.Areas.Interfaces
 
 		Task AddUserToProject(int projectId, string userId);
 
-		Task AddCommentary(Commentary commentary, int projectId);
+		Task AddCommentaryToProject(Commentary commentary, int projectId);
 
 		Task<ViewProject> GetProjectView(int projectId, string userId);
 	}
