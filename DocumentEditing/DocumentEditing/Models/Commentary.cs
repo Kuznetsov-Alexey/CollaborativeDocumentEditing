@@ -10,32 +10,25 @@ namespace DocumentEditing.Models
 	/// Represantation of commentary object
 	/// </summary>
 	public class Commentary
-	{
-		//comment ID
+	{		
 		public int Id { get; set; }
-
-		//field for link between tables
-		public int ProjectId { get; set; }
 
 		//project what comment belong to
 		public Project Project { get; set; }
-
-		//field for link between tables
-		public string CommentOwnerId { get; set; }
+		public int ProjectId { get; set; }
 
 		//commentary owner
 		public ApplicationUser CommentOwner { get; set; }
+		public string CommentOwnerId { get; set; }
 
 		//commentary's text
 		public string Text { get; set; }
 
-		//field for link between tables
-		public int? AttachedFileId { get; set; } 
-
 		//file attached to commentary
 		public UserFile AttachedFile { get; set; }
+		public int? AttachedFileId { get; set; }
 
-		//time of creation of comment
+		//time of comment creation
 		public DateTime CommentDate { get; set; }
 
 	}

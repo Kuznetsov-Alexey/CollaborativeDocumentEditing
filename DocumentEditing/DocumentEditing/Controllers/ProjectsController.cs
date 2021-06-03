@@ -31,12 +31,12 @@ namespace DocumentEditing.Controllers
 		private readonly IInviteSender _inviteSender;
 		private readonly IFileManager _fileManager;
 
-		public ProjectsController(UserManager<ApplicationUser> userManager,									
-									IProject projectManager,
-									IInviteSender inviteSender,
-									IFileManager fileManager)
+		public ProjectsController(UserManager<ApplicationUser> userManager,	
+										IProject projectManager,
+										IInviteSender inviteSender,
+										IFileManager fileManager)
 		{
-			_userManager = userManager;					
+			_userManager = userManager;			
 			_projectManager = projectManager;
 			_inviteSender = inviteSender;
 			_fileManager = fileManager;
@@ -57,8 +57,6 @@ namespace DocumentEditing.Controllers
 
 		//------------       Add new member to project    ------------//
 
-
-
 		/// <summary>
 		/// Show page for adding user to project
 		/// </summary>
@@ -68,10 +66,10 @@ namespace DocumentEditing.Controllers
 		public async Task<IActionResult> AddUserToProject(int projectId)
 		{ 
 			var currentUser = await _userManager.GetUserAsync(User);
-			var project = await _projectManager.GetProject(projectId);			
+			var project = await _projectManager.GetProject(projectId);				
 
 			//check user, he must be owner of project
-			if (project.ProjectOwner != currentUser)
+			if (project == null || project.ProjectOwner != currentUser)
 			{
 				return RedirectToAction(nameof(Index));
 			}
@@ -98,12 +96,11 @@ namespace DocumentEditing.Controllers
 			var project = await _projectManager.GetProject(model.ProjectId);			
 
 			//for adding another persons, user must be a project owner
-			if(project.ProjectOwner != currentUser)
+			if(project == null || project.ProjectOwner != currentUser)
 			{
 				return RedirectToAction(nameof(ViewProject), new { projectId = model.ProjectId });
 			}
-
-			//todo: add identity.options.User.Require.UniqueEmail
+			
 			var user = await _userManager.FindByEmailAsync(model.UserEmail);
 
 			//create user if he doesn't exist
@@ -114,14 +111,13 @@ namespace DocumentEditing.Controllers
 					Email = model.UserEmail,
 					UserName = model.UserEmail
 				};
-
-				//todo:check migration with new method in ApplicationUser
+				
 				string userPassword = user.GeneratePassword(5);				
 
 				await _userManager.CreateAsync(user, userPassword);
 
-
-				//Sending isn't working, because current email is blocked by @mail.ru
+				//Invite sending don't work, because current email is blocked by @mail.ru,
+				//but you can see method realization
 				//await _inviteSender.SendInvite(user.Email, userPassword, project.Name);
 			}
 
@@ -168,7 +164,7 @@ namespace DocumentEditing.Controllers
 			//create new project and save in database
 			Project project = new Project
 			{
-				Name = model.Name,
+				Name = model.ProjectName,
 				ProjectOwner = currentUser,
 				Visitors = new List<ApplicationUser> { currentUser },
 				CurrentFile = attachedFile
@@ -183,7 +179,8 @@ namespace DocumentEditing.Controllers
 				Project = project
 			};
 
-			await _projectManager.AddProject(project, comment);
+			await _projectManager.AddProject(project);
+			await _projectManager.AddCommentaryToProject(comment, project.Id);
 
 			//redirect to overall projects page
 			return RedirectToAction(nameof(Index));			
@@ -204,6 +201,7 @@ namespace DocumentEditing.Controllers
 			var currentUser = await _userManager.GetUserAsync(User);
 			var viewModel = await _projectManager.GetProjectView(projectId, currentUser.Id);
 
+			//check user in group of project members
 			if(!viewModel.Project.Visitors.Contains(currentUser))
 			{
 				return RedirectToAction(nameof(Index));

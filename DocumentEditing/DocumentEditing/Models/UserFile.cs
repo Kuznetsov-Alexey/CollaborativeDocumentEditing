@@ -10,8 +10,7 @@ namespace DocumentEditing.Models
 	/// Representation of user file on server
 	/// </summary>
 	public class UserFile
-	{
-		//uploaded file ID
+	{		
 		public int Id { get; set; }
 
 		//short file name, without unique part
@@ -19,12 +18,5 @@ namespace DocumentEditing.Models
 
 		//full path to file
 		public string PathToFile { get; set; }
-
-		//field for link between tables
-		//public string FileOwnerId { get; set; }
-
-		//file owner
-		//public ApplicationUser FileOwner { get; set; }
-
 	}
 }

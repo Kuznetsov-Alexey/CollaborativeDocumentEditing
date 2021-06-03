@@ -24,6 +24,7 @@ namespace DocumentEditing.Areas.Identity
                 {
                     //turn off email confirming
                     options.SignIn.RequireConfirmedAccount = false;
+                    options.User.RequireUniqueEmail = true;
 
                     //change password requirenments 
                     options.Password.RequireLowercase = false;

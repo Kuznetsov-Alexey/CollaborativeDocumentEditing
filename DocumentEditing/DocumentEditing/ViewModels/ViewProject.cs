@@ -11,6 +11,7 @@ namespace DocumentEditing.ViewModels
 	/// </summary>
 	public class ViewProject
 	{
+		//is current user a project owner
 		public bool IsOwner { get; set; }
 
 		public Project Project { get; set; }		

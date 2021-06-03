@@ -9,7 +9,7 @@ namespace DocumentEditing.Areas.Interfaces
 {
 	public interface IProject
 	{
-		Task AddProject(Project project, Commentary commentary);
+		Task AddProject(Project project);
 
 		Task<ViewUserProjects> GetUserProjects(string userId);
 

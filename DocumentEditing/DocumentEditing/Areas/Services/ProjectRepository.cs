@@ -20,13 +20,10 @@ namespace DocumentEditing.Areas.Services
 			_dbContext = dbContext;
 		}
 
-		public async Task AddProject(Project project, Commentary commentary)
+		public async Task AddProject(Project project)
 		{
 			await _dbContext.Projects.AddAsync(project);
-			await _dbContext.SaveChangesAsync();		
-
-			await AddCommentaryToProject(commentary, project.Id);
-			
+			await _dbContext.SaveChangesAsync();			
 		}
 
 		public async Task AddCommentaryToProject(Commentary commentary, int projectId)
@@ -68,9 +65,9 @@ namespace DocumentEditing.Areas.Services
 														.FirstOrDefaultAsync();
 
 			var commentaries = await _dbContext.Comments.Include(c => c.AttachedFile)
-											.Where(c => c.ProjectId == projectId)
-											.OrderByDescending(c => c.CommentDate)
-											.ToListAsync();
+														.Where(c => c.ProjectId == projectId)
+														.OrderByDescending(c => c.CommentDate)
+														.ToListAsync();
 
 			viewProject.Project = project;
 			viewProject.Commentaries = commentaries;
@@ -81,18 +78,17 @@ namespace DocumentEditing.Areas.Services
 
 		public async Task<ViewUserProjects> GetUserProjects(string userId)
 		{
-			
-
 			var invitedProjects = await _dbContext.Projects.Include(p => p.Commentaries)
-														.Where(p => p.Visitors.Any(user => user.Id == userId) && p.ProjectOwner.Id != userId)
+														.Where(p => p.Visitors.Any(user => user.Id == userId) && p.ProjectOwner.Id != userId)														
 														.ToListAsync();
+
 			invitedProjects = invitedProjects.OrderByDescending(p => p.Commentaries.LastOrDefault().CommentDate).ToList();
 
 			var personalProjects = await _dbContext.Projects.Include(p => p.Commentaries)
-											.Where(p => p.ProjectOwnerId == userId)
-											.ToListAsync();
+														.Where(p => p.ProjectOwnerId == userId)														
+														.ToListAsync();
 
-			personalProjects = personalProjects.OrderByDescending(p => p.Commentaries.LastOrDefault()?.CommentDate).ToList();
+			personalProjects = personalProjects.OrderByDescending(p => p.Commentaries.LastOrDefault().CommentDate).ToList();
 
 			ViewUserProjects viewProjects = new ViewUserProjects
 			{

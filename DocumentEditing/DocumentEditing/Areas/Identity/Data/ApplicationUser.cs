@@ -21,7 +21,7 @@ namespace DocumentEditing.Areas.Identity.Data
 		/// Simple password genarator, return password that consists of digit.
 		/// Gets one argue - length of password (4- min, 10 - max)
 		/// </summary>
-		/// <param name="passwordLenght">lenght of password</param>
+		/// <param name="passwordLenght"></param>
 		/// <returns></returns>
 		public string GeneratePassword(int passwordLenght)
 		{

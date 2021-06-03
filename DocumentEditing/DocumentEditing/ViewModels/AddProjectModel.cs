@@ -16,7 +16,7 @@ namespace DocumentEditing.ViewModels
 	{
 		[Required]
 		[Column(TypeName = "varchar(200)")]
-		public string Name { get; set; }
+		public string ProjectName { get; set; }
 
 		[Required]
 		public IFormFile UploadedFile { get; set; }

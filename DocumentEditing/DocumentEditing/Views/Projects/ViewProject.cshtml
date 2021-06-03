@@ -11,13 +11,9 @@
 <div>
     <h1>@Model.Project.Name</h1>
 </div>
-
 <div>
-
     <font>Last uploaded file:</font>
-
     <a asp-action="DownloadFile" asp-route-fileId="@Model.Project.CurrentFile.Id">@Model.Project.CurrentFile.FileName</a>
-
 </div>
 
 <div class="row">
@@ -26,14 +22,12 @@
 
 <hr />
 
-
 <div class="row col-md-12">
     <div class="col-md-9">
 
         @if (!Model.Project.IsProjectFinished)
         {
             <h4>Send comment</h4>
-
             <div>
                 <form asp-action="AddCommentaryToProject" enctype="multipart/form-data" class="border-bottom">
                     <div class="form-group">
@@ -43,8 +37,6 @@
                         <input hidden value="@Model.Project.Id" name="projectId" />
 
                     </div>
-
-
                     <div class="form-group">
                         <label class="col-form-label">Attach file</label>                 
                         <div class="custom-file">
@@ -60,9 +52,6 @@
                 </form>
             </div>
         }
-
-
-
         <div>
 
             @if(Model.Project.IsProjectFinished)
@@ -131,8 +120,6 @@
         });
 
     </script>
-
-
 
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -12,8 +12,7 @@ namespace DocumentEditing.Models
 	/// Represantation of project object
 	/// </summary>
 	public class Project
-	{
-		//project ID
+	{	
 		public  int Id { get; set; }
 
 		//project name
@@ -22,18 +21,14 @@ namespace DocumentEditing.Models
 
 		//project status
 		public bool IsProjectFinished { get; set; }
-
-		//field for link between tables
-		public string ProjectOwnerId { get; set; }
-
+				
 		//project owner
 		public ApplicationUser ProjectOwner { get; set; }
-
-		//field for link between tables
-		public int CurrentFileId { get; set;}
+		public string ProjectOwnerId { get; set; }
 
 		//last uploaded file to project
 		public UserFile CurrentFile { get; set; }
+		public int CurrentFileId { get; set; }
 
 		//collection of users, who can visit page of project
 		public ICollection<ApplicationUser> Visitors { get;set; } = new List<ApplicationUser>();
