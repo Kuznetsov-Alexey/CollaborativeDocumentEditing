@@ -216,7 +216,7 @@ namespace DocumentEditing.Controllers
 			var currentUser = await _userManager.GetUserAsync(User);
 			var project = await _projectManager.GetProject(projectId);
 
-			if(!project.Visitors.Contains(currentUser))
+			if(!project.Visitors.Contains(currentUser) || project.IsProjectFinished)
 			{
 				return RedirectToAction(nameof(ViewProject), new { projectId = projectId });
 			}
