@@ -91,7 +91,7 @@
         @if (Model.IsOwner)
         {
             <div>
-                <a class="nav-link" title="Add new member to project" asp-action="AddUserToProject" asp-route-projectId="@Model.Project.Id">Add member</a>
+                <a class="btn btn-info" title="Add new member to project" asp-action="AddUserToProject" asp-route-projectId="@Model.Project.Id">Add member</a>
             </div>
 
             @if (!Model.Project.IsProjectFinished)
@@ -99,7 +99,7 @@
                 <h5 class="mt-5">Finish project</h5>
 
                 <div>
-                    <a class="nav-link" title="Close project for everyone" asp-action="FinishProject" asp-route-projectId="@Model.Project.Id">Close project</a>
+                    <a class="btn btn-danger" title="Close project for everyone" asp-action="FinishProject" asp-route-projectId="@Model.Project.Id">Close project</a>
                 </div>
             }
         }

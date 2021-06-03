@@ -196,8 +196,7 @@ namespace DocumentEditing.Controllers
 		/// <returns></returns>
 		[HttpGet]
 		public async Task<IActionResult> ViewProject(int projectId)
-		{		
-			//todo: change buttons style on view
+		{	
 			var currentUser = await _userManager.GetUserAsync(User);
 			var viewModel = await _projectManager.GetProjectView(projectId, currentUser.Id);
 
