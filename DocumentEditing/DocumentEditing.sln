@@ -5,6 +5,16 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentEditing", "DocumentEditing\DocumentEditing.csproj", "{8F186DBB-5B25-41D7-8C15-5D43B50AD710}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentEditing.DAL.Contracts", "DocumentEditing.DAL.Contracts\DocumentEditing.DAL.Contracts.csproj", "{6B275ED6-827F-455D-930F-C22583C0EB96}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentEditing.DAL.Implementations", "DocumentEditing.DAL.Implementations\DocumentEditing.DAL.Implementations.csproj", "{7771A5CF-0327-450C-8F02-C11EDAC18AE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentEditing.Domain.Contracts", "DocumentEditing.Domain.Contracts\DocumentEditing.Domain.Contracts.csproj", "{C6EF5B89-8C00-4DFF-A64A-51C19B94C922}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentEditing.Domain.Implementations", "DocumentEditing.Domain.Implementations\DocumentEditing.Domain.Implementations.csproj", "{B2DC6EDC-DA1B-4FD2-A358-2C896326131B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentEditing.Web", "DocumentEditing.Web\DocumentEditing.Web.csproj", "{F5A9D2D6-EA29-4312-847D-4B5303C56FBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +25,26 @@ Global
 		{8F186DBB-5B25-41D7-8C15-5D43B50AD710}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F186DBB-5B25-41D7-8C15-5D43B50AD710}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F186DBB-5B25-41D7-8C15-5D43B50AD710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B275ED6-827F-455D-930F-C22583C0EB96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B275ED6-827F-455D-930F-C22583C0EB96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B275ED6-827F-455D-930F-C22583C0EB96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B275ED6-827F-455D-930F-C22583C0EB96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7771A5CF-0327-450C-8F02-C11EDAC18AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7771A5CF-0327-450C-8F02-C11EDAC18AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7771A5CF-0327-450C-8F02-C11EDAC18AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7771A5CF-0327-450C-8F02-C11EDAC18AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6EF5B89-8C00-4DFF-A64A-51C19B94C922}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6EF5B89-8C00-4DFF-A64A-51C19B94C922}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6EF5B89-8C00-4DFF-A64A-51C19B94C922}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6EF5B89-8C00-4DFF-A64A-51C19B94C922}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2DC6EDC-DA1B-4FD2-A358-2C896326131B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2DC6EDC-DA1B-4FD2-A358-2C896326131B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2DC6EDC-DA1B-4FD2-A358-2C896326131B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2DC6EDC-DA1B-4FD2-A358-2C896326131B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5A9D2D6-EA29-4312-847D-4B5303C56FBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5A9D2D6-EA29-4312-847D-4B5303C56FBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5A9D2D6-EA29-4312-847D-4B5303C56FBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5A9D2D6-EA29-4312-847D-4B5303C56FBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

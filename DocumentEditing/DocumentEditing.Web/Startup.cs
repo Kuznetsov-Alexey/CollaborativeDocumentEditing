@@ -1,12 +1,6 @@
-using DocumentEditing.Areas.Identity.Data;
-using DocumentEditing.Areas.Interfaces;
-using DocumentEditing.Areas.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DocumentEditing
+namespace DocumentEditing.Web
 {
 	public class Startup
 	{
@@ -26,36 +20,10 @@ namespace DocumentEditing
 
 		public IConfiguration Configuration { get; }
 
-	
+		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllersWithViews();
-
-			services.AddTransient<IProject, ProjectRepository>();
-			services.AddTransient<IInviteSender, EmailInviteSender>();
-			services.AddTransient<IFileManager, LocalFileManager>();
-			services.AddHttpContextAccessor();
-
-			services.AddMvc(options =>
-			{
-				var policy = new AuthorizationPolicyBuilder()
-								.RequireAuthenticatedUser()
-								.Build();
-
-				options.Filters.Add(new AuthorizeFilter(policy));
-
-			}).AddXmlSerializerFormatters();
-
-
-			services.AddAuthentication()
-				.AddGoogle(options => {
-
-					options.ClientId = "567847066979-sshnp0bg8c9r161p9e4ouji082c0g9o0.apps.googleusercontent.com";
-					options.ClientSecret = "fYt_GZebYzsfFW1IAVU9pL_2";
-				});
-				
-
-			services.AddRazorPages();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,16 +44,13 @@ namespace DocumentEditing
 
 			app.UseRouting();
 
-			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(
 					name: "default",
-					pattern: "{controller=Projects}/{action=Index}/{id?}");
-
-				endpoints.MapRazorPages();
+					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
 		}
 	}

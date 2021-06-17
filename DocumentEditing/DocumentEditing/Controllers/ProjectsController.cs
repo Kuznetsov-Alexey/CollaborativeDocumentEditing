@@ -31,10 +31,7 @@ namespace DocumentEditing.Controllers
 		private readonly IInviteSender _inviteSender;
 		private readonly IFileManager _fileManager;
 
-		public ProjectsController(UserManager<ApplicationUser> userManager,	
-										IProject projectManager,
-										IInviteSender inviteSender,
-										IFileManager fileManager)
+		public ProjectsController(UserManager<ApplicationUser> userManager,	IProject projectManager, IInviteSender inviteSender, IFileManager fileManager)
 		{
 			_userManager = userManager;			
 			_projectManager = projectManager;
@@ -54,6 +51,7 @@ namespace DocumentEditing.Controllers
 			return View(userProjects);
 		}
 
+		# region Add new member to project
 
 		//------------       Add new member to project    ------------//
 
@@ -125,6 +123,8 @@ namespace DocumentEditing.Controllers
 
 			return RedirectToAction(nameof(ViewProject), new { projectId = model.ProjectId });
 		}
+
+		#endregion
 
 		//------------       Download file from page    ------------//
 
@@ -221,7 +221,8 @@ namespace DocumentEditing.Controllers
 			}
 
 			//create commentary object
-			var comment = new Commentary { 
+			var comment = new Commentary 
+			{ 
 				CommentDate = DateTime.Now,
 				Text = commentText,
 				ProjectId = projectId,
