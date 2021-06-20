@@ -15,7 +15,7 @@ namespace DocumentEditing.Areas.Interfaces
 
 		Task<Project> GetProject(int projectId);
 
-		Task FinishProject(int projectId, string userId);
+		Task FinishProject(int projectId);
 
 		Task AddUserToProject(int projectId, string userId);
 

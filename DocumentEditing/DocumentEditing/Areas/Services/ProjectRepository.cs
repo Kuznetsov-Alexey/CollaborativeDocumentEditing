@@ -99,7 +99,7 @@ namespace DocumentEditing.Areas.Services
 			return viewProjects;
 		}
 
-		public async Task FinishProject(int projectId, string userId)
+		public async Task FinishProject(int projectId)
 		{
 			var project = await _dbContext.Projects.FindAsync(projectId);			
 			project.IsProjectFinished = true;

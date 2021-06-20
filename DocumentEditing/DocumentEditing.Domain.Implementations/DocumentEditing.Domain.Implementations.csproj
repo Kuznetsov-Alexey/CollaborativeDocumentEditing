@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DocumentEditing.DAL.Implementations\DocumentEditing.DAL.Implementations.csproj" />
     <ProjectReference Include="..\DocumentEditing.Domain.Contracts\DocumentEditing.Domain.Contracts.csproj" />
   </ItemGroup>
 

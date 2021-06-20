@@ -13,9 +13,9 @@ namespace DocumentEditing.DAL.Contracts.Enteties
     {      
 
         //owned project for link between objects
-        public ICollection<ProjectEntity> OwnProjects { get; set; } = new List<ProjectEntity>();
+        public List<ProjectEntity> OwnProjects { get; set; } = new List<ProjectEntity>();
 
         //available for wathcing projects for link between objects
-        public ICollection<ProjectEntity> AvailableProjects { get; set; } = new List<ProjectEntity>();
+        public List<ProjectEntity> AvailableProjects { get; set; } = new List<ProjectEntity>();
 	}
 }

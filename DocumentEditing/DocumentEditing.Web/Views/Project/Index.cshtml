@@ -1,0 +1,47 @@
+﻿@model DocumentEditing.Domain.Contracts.ViewModels.ViewUserProjectsModel
+@{ 
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-left">
+    <h1 class="display-4">Available Projects</h1>
+
+    <div class="row">
+
+        <a class="nav-link" style="font-size:20px"  asp-controller="Projects" asp-action="AddProject">Add Project</a>
+
+    </div>
+
+    <div class="align-items-center">
+
+        <h4 class="row">Personal projects</h4>
+        <ul>
+            @foreach (var project in Model.PersonalProjects)
+            {
+
+                <li class="nav-item">
+
+                    <a class="nav-link" asp-action="ViewProject" asp-route-projectId="@project.Id">@project.Name</a>
+                    Modified - @project.Commentaries?.LastOrDefault()?.CommentDate.ToString("H:mm d MMM ", System.Globalization.CultureInfo.CreateSpecificCulture("en-US"))
+
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div>
+
+        <h4 class="row">Other's projects</h4>
+        <ul>
+            @foreach (var project in Model.InvitedProjects)
+            {
+                <li class="nav-item">
+
+                    <a class="nav-link" asp-action="ViewProject" asp-route-projectId="@project.Id">@project.Name</a>
+                    Modified - @project.Commentaries?.LastOrDefault().CommentDate.ToString("H:mm d MMM ", System.Globalization.CultureInfo.CreateSpecificCulture("en-US"))
+
+                </li>
+            }
+        </ul>
+    </div>
+</div>

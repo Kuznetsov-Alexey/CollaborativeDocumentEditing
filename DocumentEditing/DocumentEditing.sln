@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentEditing.DAL.Contrac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentEditing.DAL.Implementations", "DocumentEditing.DAL.Implementations\DocumentEditing.DAL.Implementations.csproj", "{7771A5CF-0327-450C-8F02-C11EDAC18AE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentEditing.Domain.Contracts", "DocumentEditing.Domain.Contracts\DocumentEditing.Domain.Contracts.csproj", "{C6EF5B89-8C00-4DFF-A64A-51C19B94C922}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentEditing.Domain.Contracts", "DocumentEditing.Domain.Contracts\DocumentEditing.Domain.Contracts.csproj", "{C6EF5B89-8C00-4DFF-A64A-51C19B94C922}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentEditing.Domain.Implementations", "DocumentEditing.Domain.Implementations\DocumentEditing.Domain.Implementations.csproj", "{B2DC6EDC-DA1B-4FD2-A358-2C896326131B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentEditing.Domain.Implementations", "DocumentEditing.Domain.Implementations\DocumentEditing.Domain.Implementations.csproj", "{B2DC6EDC-DA1B-4FD2-A358-2C896326131B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentEditing.Web", "DocumentEditing.Web\DocumentEditing.Web.csproj", "{F5A9D2D6-EA29-4312-847D-4B5303C56FBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentEditing.Web", "DocumentEditing.Web\DocumentEditing.Web.csproj", "{F5A9D2D6-EA29-4312-847D-4B5303C56FBD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

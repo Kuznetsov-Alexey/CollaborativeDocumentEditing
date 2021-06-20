@@ -10,7 +10,7 @@ namespace DocumentEditing.Domain.Contracts.Models
 		public string Email { get; set; }
 		public string HashPassword { get; set; }
 
-		public ICollection<ProjectModel> OwnProjects { get; set; } = new List<ProjectModel>();
-		public ICollection<ProjectModel> AvailableProjects { get; set; } = new List<ProjectModel>();
+		public List<ProjectModel> OwnProjects { get; set; } = new List<ProjectModel>();
+		public List<ProjectModel> AvailableProjects { get; set; } = new List<ProjectModel>();
 	}
 }

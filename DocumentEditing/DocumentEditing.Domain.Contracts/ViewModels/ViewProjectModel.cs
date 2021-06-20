@@ -9,6 +9,6 @@ namespace DocumentEditing.Domain.Contracts.ViewModels
 	{
 		public bool IsOwner { get; set; }
 		public ProjectModel Project { get; set; }
-		public ICollection<CommentaryModel> Commentaries { get; set; }
+		public List<CommentaryModel> Commentaries { get; set; }
 	}
 }

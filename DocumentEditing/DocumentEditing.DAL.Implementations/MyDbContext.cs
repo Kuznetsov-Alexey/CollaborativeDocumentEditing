@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DocumentEditing.DAL.Implementations
 {
-    public class AuthDbContext : IdentityDbContext<ApplicationUserEntity>
+    public class MyDbContext : IdentityDbContext<ApplicationUserEntity>
     {
        
         public DbSet<CommentaryEntity> Comments { get; set; }        
@@ -17,8 +17,14 @@ namespace DocumentEditing.DAL.Implementations
         public DbSet<UserFileEntity> Files { get; set; }
 
 
-        public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
+        public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
+            //Database.EnsureCreated();
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await base.SaveChangesAsync();
         }
 
         public DbSet<T> DbSet<T>() where T : class
@@ -26,9 +32,12 @@ namespace DocumentEditing.DAL.Implementations
             return Set<T>();
 		}
 
+       
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+           
 
             //create relationship many-to-many between projects and users who can visit project page
             builder.Entity<ProjectEntity>().HasMany(proj => proj.Visitors).WithMany(user => user.AvailableProjects);

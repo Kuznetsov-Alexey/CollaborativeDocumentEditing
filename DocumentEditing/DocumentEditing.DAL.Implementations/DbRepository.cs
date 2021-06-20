@@ -2,16 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DocumentEditing.DAL.Implementations
 {
-	class DbRepository : IDbRepository
+	public class DbRepository : IDbRepository
 	{
-		private readonly AuthDbContext _context;
+		private readonly MyDbContext _context;
 
-		public DbRepository(AuthDbContext context)
+		public DbRepository(MyDbContext context)
 		{
 			_context = context;
 		}
@@ -34,6 +35,11 @@ namespace DocumentEditing.DAL.Implementations
 		public async Task SaveChangesAsync()
 		{
 			await _context.SaveChangesAsync();
+		}
+
+		public IQueryable<T> Get<T>(Expression<Func<T, bool>> selector) where T : class
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

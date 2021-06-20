@@ -12,7 +12,7 @@ namespace DocumentEditing.Domain.Contracts
 
 		Task<ProjectModel> GetProject(int projectId);
 
-		Task FinishProject(int projectId, string userId);
+		Task FinishProject(int projectId);
 
 		Task AddUserToProject(int projectId, string userId);
 

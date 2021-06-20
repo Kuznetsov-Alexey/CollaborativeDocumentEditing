@@ -10,7 +10,7 @@ namespace DocumentEditing.Domain.Contracts.Models
 		public ApplicationUserModel ProjectOwner { get; set; }
 		public UserFileModel CurrentFile { get; set; }		
 
-		public ICollection<ApplicationUserModel> Visitors { get; set; } = new List<ApplicationUserModel>();
-		public ICollection<CommentaryModel> Commentaries { get; set; } = new List<CommentaryModel>();
+		public List<ApplicationUserModel> Visitors { get; set; } = new List<ApplicationUserModel>();
+		public List<CommentaryModel> Commentaries { get; set; } = new List<CommentaryModel>();
 	}
 }

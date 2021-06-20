@@ -20,6 +20,8 @@ namespace DocumentEditing.DAL.Contracts.Enteties
 
 		//project status
 		public bool IsProjectFinished { get; set; }
+
+		//public DateTime LastModifyDate { get; set; }
 				
 		//project owner
 		public ApplicationUserEntity ProjectOwner { get; set; }
@@ -30,10 +32,10 @@ namespace DocumentEditing.DAL.Contracts.Enteties
 		public int CurrentFileId { get; set; }
 
 		//collection of users, who can visit page of project
-		public ICollection<ApplicationUserEntity> Visitors { get;set; } = new List<ApplicationUserEntity>();
+		public List<ApplicationUserEntity> Visitors { get; set; }// = new List<ApplicationUserEntity>();		
 
 		//collection of commentaries
-		public ICollection<CommentaryEntity> Commentaries { get; set; } = new List<CommentaryEntity>();
+		public List<CommentaryEntity> Commentaries { get; set; }// = new List<CommentaryEntity>();		
 
 	}
 }

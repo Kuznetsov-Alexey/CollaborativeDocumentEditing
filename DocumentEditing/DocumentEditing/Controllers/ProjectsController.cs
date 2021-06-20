@@ -62,7 +62,10 @@ namespace DocumentEditing.Controllers
 		/// <returns></returns>
 		[HttpGet]
 		public async Task<IActionResult> AddUserToProject(int projectId)
-		{ 
+		{
+
+			
+
 			var currentUser = await _userManager.GetUserAsync(User);
 			var project = await _projectManager.GetProject(projectId);				
 
@@ -119,7 +122,7 @@ namespace DocumentEditing.Controllers
 				//await _inviteSender.SendInvite(user.Email, userPassword, project.Name);
 			}
 
-			await _projectManager.AddUserToProject(project.Id, user.Email);
+			await _projectManager.AddUserToProject(project.Id, user.Id);
 
 			return RedirectToAction(nameof(ViewProject), new { projectId = model.ProjectId });
 		}
@@ -253,7 +256,7 @@ namespace DocumentEditing.Controllers
 
 			if(project.ProjectOwnerId == currentUser.Id)
 			{
-				await _projectManager.FinishProject(projectId, currentUser.Id);
+				await _projectManager.FinishProject(projectId);
 			}
 
 			return RedirectToAction(nameof(ViewProject), new { projectId = projectId });
