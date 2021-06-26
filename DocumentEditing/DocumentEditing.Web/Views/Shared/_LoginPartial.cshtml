@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using DocumentEditing.DAL.Contracts.Enteties
+
+@inject SignInManager<ApplicationUserEntity> SignInManager
+@inject UserManager<ApplicationUserEntity> UserManager
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    @*<li class="nav-item">
+        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Email" title="Manage">Hello @UserManager.GetUserName(User)</a>
+    </li>*@
+    <li class="nav-item">
+        <label class="nav-link text-dark">Hello @UserManager.GetUserName(User)</label>
+    </li>
+    <li class="nav-item">
+        <form id="logoutForm" class="form-inline" asp-action="Logout" asp-controller="Account" asp-route-returnUrl="@Url.Action("Index", "Projects", new { area = "" })">
+            <button id="logout" type="submit" class="nav-link btn text-dark">Logout</button>
+        </form>
+    </li>
+}
+
+</ul>

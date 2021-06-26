@@ -1,4 +1,5 @@
 ﻿using DocumentEditing.Domain.Contracts.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,10 +9,17 @@ namespace DocumentEditing.Domain.Contracts
 {
 	public interface IMyUserManager
 	{
-		Task<ApplicationUserModel> GetCurrentUser(System.Security.Claims.ClaimsPrincipal user);
+		Task<ApplicationUserModel> GetUserByClaimsAsync(System.Security.Claims.ClaimsPrincipal user);
 
 		Task<ApplicationUserModel> GetUserByEmail(string email);
 
-		Task CreateUser(ApplicationUserModel user, string password);
+		Task<IdentityResult> CreateUser(ApplicationUserModel user);
+
+		Task SignIn(ApplicationUserModel user);
+
+		Task<SignInResult> PasswordSignIn(ApplicationUserModel user, bool rememberMe);
+		
+		string GeneratePassword(int lenght);
+		Task SignOut();
 	}
 }

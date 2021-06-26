@@ -45,6 +45,7 @@ namespace DocumentEditing.Web
 				//turn off email confirming
 				options.SignIn.RequireConfirmedAccount = false;
 				options.User.RequireUniqueEmail = true;
+				
 
 				//change password requirenments 
 				options.Password.RequireLowercase = false;
@@ -58,9 +59,10 @@ namespace DocumentEditing.Web
 			services.AddControllersWithViews();
 
 			services.AddAutoMapper(typeof(Startup));
+
 			services.AddScoped<IDbRepository, DbRepository>();
 
-
+			services.AddTransient<IInviteSenderService, InviteSenderService>();
 			services.AddTransient<IFileManagerService, FileManagerService>();
 			services.AddTransient<IMyUserManager, MyUserManager>();			
 			services.AddTransient<IProjectService, ProjectService>();
@@ -83,7 +85,7 @@ namespace DocumentEditing.Web
 			app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllerRoute(
-					name: "default",
+					name: "project",
 					pattern: "{controller=Project}/{action=Index}/{id?}");
 			});
 		}

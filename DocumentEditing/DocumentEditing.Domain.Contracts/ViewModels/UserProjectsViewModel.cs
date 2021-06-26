@@ -9,7 +9,7 @@ namespace DocumentEditing.Domain.Contracts.ViewModels
 	/// <summary>
 	/// For showing available project 
 	/// </summary>
-	public class ViewUserProjectsModel
+	public class UserProjectsViewModel
 	{
 		//projects that user created
 		public List<ProjectModel> PersonalProjects { get; set; }

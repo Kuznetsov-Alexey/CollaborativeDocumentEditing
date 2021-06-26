@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DocumentEditing.Domain.Contracts.ViewModels
 {
-	public class ViewProjectModel
+	public class ProjectViewModel
 	{
 		public bool IsOwner { get; set; }
 		public ProjectModel Project { get; set; }

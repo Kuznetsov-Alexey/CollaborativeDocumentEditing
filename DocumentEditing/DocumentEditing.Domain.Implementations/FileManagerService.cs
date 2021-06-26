@@ -66,18 +66,18 @@ namespace DocumentEditing.Domain.Implementations
 			//copy file to server folder
 			await fileToUpload.CopyToAsync(new FileStream(filePath, FileMode.Create));
 
-			UserFileModel userFile = new UserFileModel
+			UserFileEntity userFile = new UserFileEntity
 			{
 				FileName = fileToUpload.FileName,
 				PathToFile = filePath
 			};
 
-			var mappedFile = _mapper.Map<UserFileEntity>(userFile);
-
-			await _repository.Add(mappedFile);
+			await _repository.Add<UserFileEntity>(userFile);
 			await _repository.SaveChangesAsync();
 
-			return userFile;
+			var mappedFile = _mapper.Map<UserFileModel>(userFile);
+
+			return mappedFile;
 		}
 	}
 }

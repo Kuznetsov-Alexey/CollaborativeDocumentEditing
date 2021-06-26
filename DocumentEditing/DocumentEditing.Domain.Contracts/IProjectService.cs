@@ -8,7 +8,7 @@ namespace DocumentEditing.Domain.Contracts
 	{
 		Task AddProject(ProjectModel project);
 
-		Task<ViewUserProjectsModel> GetUserProjects(string userId);
+		Task<UserProjectsViewModel> GetUserProjects(string userId);
 
 		Task<ProjectModel> GetProject(int projectId);
 
@@ -18,6 +18,6 @@ namespace DocumentEditing.Domain.Contracts
 
 		Task AddCommentaryToProject(CommentaryModel commentary, int projectId);
 
-		Task<ViewProjectModel> GetProjectView(int projectId, string userId);
+		Task<ProjectViewModel> GetProjectView(int projectId, string userId);
 	}
 }
