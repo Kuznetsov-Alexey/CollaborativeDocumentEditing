@@ -23,26 +23,23 @@ namespace DocumentEditing.Web.Controllers
 	{
 		private readonly ILogger<ProjectController> _logger;
 		private readonly IInviteSenderService _inviteSender;
-		private readonly IMyUserManager _myManager;
+		private readonly IMyUserManager _myUserManager;
 		private readonly IFileManagerService _fileManager;
 		private readonly IProjectService _projectService;
-		private readonly UserManager<ApplicationUserEntity> _userManager;
 
-		public ProjectController(ILogger<ProjectController> logger, IProjectService projectService, UserManager<ApplicationUserEntity> userManager, IMyUserManager myManager, IFileManagerService fileManager,
+		public ProjectController(ILogger<ProjectController> logger, IProjectService projectService, IMyUserManager myManager, IFileManagerService fileManager,
 			IInviteSenderService inviteSender)
 		{
 			_inviteSender = inviteSender;
-			_myManager = myManager;
+			_myUserManager = myManager;
 			_fileManager = fileManager;
 			_logger = logger;
 			_projectService = projectService;
-			_userManager = userManager;
 		}
 
 		public async Task<IActionResult> Index()
 		{
-			var myUser = await _myManager.GetUserByClaimsAsync(User);
-			//var myUser = await _myManager.GetUserByEmail("vlad@mail.ru");
+			var myUser = await _myUserManager.GetUserByClaimsAsync(User);
 			var userProjects = await _projectService.GetUserProjects(myUser.Id);
 
 			return View(userProjects);
@@ -56,9 +53,7 @@ namespace DocumentEditing.Web.Controllers
 		[HttpGet]
 		public async Task<IActionResult> ViewProject(int projectId)
 		{
-			var currentUser = await _myManager.GetUserByClaimsAsync(User);
-			//var currentUser = await _myManager.GetUserByEmail("vlad@mail.ru");
-
+			var currentUser = await _myUserManager.GetUserByClaimsAsync(User);
 			var viewModel = await _projectService.GetProjectView(projectId, currentUser.Id);
 
 			//check user in group of project members
@@ -92,10 +87,8 @@ namespace DocumentEditing.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> AddProject(AddProjectModel model)
 		{
-			var currentUser = await _myManager.GetUserByClaimsAsync(User);
-			//var currentUser = await _myManager.GetUserByEmail("vlad@mail.ru");
-
-			//var currentUser = await _myManager.GetUserByClaimsAsync(User);
+			var currentUser = await _myUserManager.GetUserByClaimsAsync(User);
+			
 
 			if (!ModelState.IsValid)
 			{
@@ -121,8 +114,7 @@ namespace DocumentEditing.Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> AddCommentaryToProject(AddCommentaryToProjectModel commentaryModel)
 		{
-			var currentUser = await _myManager.GetUserByClaimsAsync(User);
-			//var currentUser = await _myManager.GetUserByEmail("vlad@mail.ru");
+			var currentUser = await _myUserManager.GetUserByClaimsAsync(User);
 			var project = await _projectService.GetProject(commentaryModel.ProjectId);
 
 			if (!project.Visitors.Any(v => v.Id == currentUser.Id) || project.IsProjectFinished)
@@ -150,11 +142,8 @@ namespace DocumentEditing.Web.Controllers
 
 		[HttpGet]
 		public async Task<IActionResult> FinishProject(int projectId)
-		{
-			//get current user
-			var currentUser = await _myManager.GetUserByClaimsAsync(User);
-			//var currentUser = await _myManager.GetUserByEmail("vlad@mail.ru");
-			//var currentUser = await _userManager.GetUserAsync(User);
+		{			
+			var currentUser = await _myUserManager.GetUserByClaimsAsync(User);
 			var project = await _projectService.GetProject(projectId);
 
 			if (project.ProjectOwner.Id == currentUser.Id)
@@ -177,9 +166,7 @@ namespace DocumentEditing.Web.Controllers
 		[HttpGet]
 		public async Task<IActionResult> AddUserToProject(int projectId)
 		{
-			var currentUser = await _myManager.GetUserByClaimsAsync(User);
-			//var currentUser = await _myManager.GetUserByEmail("vlad@mail.ru");
-			//var currentUser = await _userManager.GetUserAsync(User);
+			var currentUser = await _myUserManager.GetUserByClaimsAsync(User);
 			var project = await _projectService.GetProject(projectId);
 
 			//check user, he must be owner of project
@@ -206,7 +193,7 @@ namespace DocumentEditing.Web.Controllers
 		{
 			
 
-			var currentUser = await _myManager.GetUserByClaimsAsync(User);
+			var currentUser = await _myUserManager.GetUserByClaimsAsync(User);
 			//var currentUser = await _myManager.GetUserByEmail("vlad@mail.ru");
 			//get neccessary data from DB
 			var project = await _projectService.GetProject(model.ProjectId);
@@ -217,12 +204,12 @@ namespace DocumentEditing.Web.Controllers
 				return RedirectToAction(nameof(ViewProject), new { projectId = model.ProjectId });
 			}
 
-			var user = await _myManager.GetUserByEmail(model.UserEmail);
+			var user = await _myUserManager.GetUserByEmail(model.UserEmail);
 
 			//create user if he doesn't exist
 			if (user == null)
 			{
-				string userPassword = _myManager.GeneratePassword(5);
+				string userPassword = _myUserManager.GeneratePassword(5);
 
 
 				user = new ApplicationUserModel
@@ -233,7 +220,7 @@ namespace DocumentEditing.Web.Controllers
 
 				};
 
-				await _myManager.CreateUser(user);
+				await _myUserManager.CreateUser(user);
 
 				//Invite sending don't work, because current email is blocked by @mail.ru,
 				//but you can see method realization
